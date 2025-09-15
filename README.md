@@ -88,6 +88,16 @@ The project has two parts:
 
 ---
 
+## 🚀 Project Status
+
+- [x] 🔥 Fire detection model  
+- [x] 💨 Smoke detection model  
+- [ ] 💾 TF card storage  
+- [ ] 🟢 Real-time camera input  
+- [ ] 📊 Accuracy benchmark results  
+
+---
+
 # ✨ Thanks for using this project!
 
 - Combines **Python YOLO fine-tuning** + **ESP32-S3 real-time detection**  
