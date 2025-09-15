@@ -1,4 +1,4 @@
-# Fire & Smoke Detection (Edge AI) ESP32-S3 Sense + TFCard + Python Fine-Tuning
+# Fire & Smoke Detection (Edge AI) ESP32-S3 Sense + TFCard + Web Server + Python Fine-Tuning
 
 Real-time **fire and smoke detection** using **ESP32-S3 Sense** with camera module and **TFCard storage**, combined with **Python training & fine-tuning** of the detection model.  
 
