@@ -81,7 +81,7 @@ static esp_err_t index_handler(httpd_req_t *req) {
 </style>
 </head>
 <body>
-    <h1 id="title">Fire Detection System</h1>
+    <h1 id="title">Fire & Smoke Detection System</h1>
     <img id="stream" src="/stream" width="320" height="240">
     <script>
         setInterval(function() {
@@ -97,7 +97,7 @@ static esp_err_t index_handler(httpd_req_t *req) {
                     } else {
                         img.classList.remove('detected');
                         title.classList.remove('detected');
-                        title.innerText = "Fire Detection System";
+                        title.innerText = "Fire & Smoke Detection System";
                     }
                 })
                 .catch(error => console.error('Error fetching status:', error));
