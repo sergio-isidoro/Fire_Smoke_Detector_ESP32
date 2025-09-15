@@ -10,6 +10,9 @@
       "includePath": [
         "${workspaceFolder}/**",
         "${config:idf.espIdfPathWin}/components/**",
+        "${config:idf.espIdfPathWin}/components/esp_wifi/**",
+        "${config:idf.espIdfPathWin}/components/esp_http_server/**",
+        "${config:idf.espIdfPathWin}/components/nvs_flash/**",
         "${workspaceFolder}/components/tflite-micro/**",
         "${workspaceFolder}/components/esp32-camera/**",
         "C:/Espressif/tools/xtensa-esp-elf/esp-14.2.0_20241119/xtensa-esp-elf/include/**"
@@ -18,6 +21,9 @@
         "path": [
           "${workspaceFolder}/**",
           "${config:idf.espIdfPathWin}/components/**",
+          "${config:idf.espIdfPathWin}/components/esp_wifi/**",
+          "${config:idf.espIdfPathWin}/components/esp_http_server/**",
+          "${config:idf.espIdfPathWin}/components/nvs_flash/**",
           "${workspaceFolder}/components/tflite-micro/**",
           "${workspaceFolder}/components/esp32-camera/**",
           "C:/Espressif/tools/xtensa-esp-elf/esp-14.2.0_20241119/xtensa-esp-elf/include/**"
