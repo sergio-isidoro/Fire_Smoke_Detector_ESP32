@@ -2,11 +2,11 @@
 #include "esp_http_server.h"
 #include "esp_log.h"
 #include "esp_camera.h"
-#include "shared_state.h" // Para aceder ao status da deteção
+#include "shared_state.h" // To access detection status
 
 static const char *TAG = "WEB_SERVER";
 
-// Handler para o stream de vídeo MJPEG
+// Handler for MJPEG video stream
 static esp_err_t stream_handler(httpd_req_t *req) {
     camera_fb_t *fb = NULL;
     esp_err_t res = ESP_OK;
@@ -43,15 +43,15 @@ static esp_err_t stream_handler(httpd_req_t *req) {
         }
 
         if (res != ESP_OK) {
-            break; // Sai do loop se houver um erro de envio
+            break; // Exit loop if there is a send error
         }
         
-        vTaskDelay(pdMS_TO_TICKS(100)); // Pequeno delay para não sobrecarregar
+        vTaskDelay(pdMS_TO_TICKS(100)); // Small delay to avoid overload
     }
     return res;
 }
 
-// Handler para o status da deteção (retorna JSON)
+// Handler for detection status (returns JSON)
 static esp_err_t status_handler(httpd_req_t *req) {
     httpd_resp_set_type(req, "application/json");
     const char *json_response;
@@ -65,7 +65,7 @@ static esp_err_t status_handler(httpd_req_t *req) {
     return httpd_resp_send(req, json_response, strlen(json_response));
 }
 
-// Handler para a página HTML principal
+// Handler for the main HTML page
 static esp_err_t index_handler(httpd_req_t *req) {
     const char* html = R"html(
 <html>
@@ -81,7 +81,7 @@ static esp_err_t index_handler(httpd_req_t *req) {
 </style>
 </head>
 <body>
-    <h1 id="title">Sistema de Dete&ccedil;&atilde;o de Inc&ecirc;ndio</h1>
+    <h1 id="title">Fire Detection System</h1>
     <img id="stream" src="/stream" width="320" height="240">
     <script>
         setInterval(function() {
@@ -93,15 +93,15 @@ static esp_err_t index_handler(httpd_req_t *req) {
                     if (data.status === 'detected') {
                         img.classList.add('detected');
                         title.classList.add('detected');
-                        title.innerText = "ALERTA: FOGO/FUMO DETETADO!";
+                        title.innerText = "ALERT: FIRE/SMOKE DETECTED!";
                     } else {
                         img.classList.remove('detected');
                         title.classList.remove('detected');
-                        title.innerText = "Sistema de Dete\u00e7\u00e3o de Inc\u00eandio";
+                        title.innerText = "Fire Detection System";
                     }
                 })
                 .catch(error => console.error('Error fetching status:', error));
-        }, 1000); // Verifica o status a cada segundo
+        }, 1000); // Check status every second
     </script>
 </body>
 </html>
