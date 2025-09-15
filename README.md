@@ -27,7 +27,7 @@ The project has two parts:
 
 ## ✅ Compatible Hardware
 
-- **ESP32-S3 Sense** (DevKit, AiThinker, Seeed XIAO S3)  
+- **ESP32-S3 Sense** (DevKit, AiThinker, **Seeed XIAO S3**)  
 - Camera module OV2640 or compatible  
 - TFCard/SD card slot for storage  
 
@@ -41,7 +41,7 @@ The project has two parts:
 
 ---
 
-## ⚙️ How to Train the Model and Generate `model.h`
+## ⚙️ How to Train the Model and Generate `model_data.h`
 
 1. **Train or Fine-Tune the Model in Python**:
    - Use your dataset of fire, smoke, and no-fire images.
@@ -53,7 +53,7 @@ The project has two parts:
    - Ensure optimizations for microcontrollers (quantization recommended).
 
 3. **Generate `model.h` for ESP32**:
-   - Convert `.tflite` file into a C header file containing a byte array (`model.h`) for inclusion in ESP32 firmware.
+   - Convert `.tflite` file into a C++ header file containing a byte array (`model_data.h`) for inclusion in ESP32 firmware.
    - Tools like `xxd` or Python scripts can produce this:
      ```
      xxd -i model.tflite > model_data.h
@@ -61,7 +61,7 @@ The project has two parts:
    - Include `model_data.h` in your firmware to load the TFLite model into memory.
 
 4. **Deploy to ESP32**:
-   - Flash the firmware with `main.c`, `detector.c/h`, `camera.c/h`, `storage.c/h` and `model_data.h`.
+   - Flash the firmware with `main.cpp`, `detector.cpp/h`, `camera.cpp/h`, `storage.cpp/h` and `model_data.cpp/h`.
    - The ESP32 will run the model on camera frames, trigger LED, and save images on TFCard.
 
 ---
@@ -70,11 +70,11 @@ The project has two parts:
 
 | File               | Description                                       |
 |-------------------|--------------------------------------------------|
-| `main.c`           | Main loop, initializes camera, detector, storage |
-| `camera.c/h`       | Camera initialization and frame capture          |
-| `detector.c/h`     | TFLite Micro inference, LED control, cooldown    |
-| `storage.c/h`      | TFCard initialization and image saving           |
-| `model_data.h`     | TFLite model array for ESP32 deployment          |
+| `main.cpp`           | Main loop, initializes camera, detector, storage |
+| `camera.cpp/h`       | Camera initialization and frame capture          |
+| `detector.cpp/h`     | TFLite Micro inference, LED control, cooldown    |
+| `storage.cpp/h`      | TFCard initialization and image saving           |
+| `model_data.cpp/h`     | TFLite model array for ESP32 deployment          |
 
 ---
 
@@ -83,7 +83,7 @@ The project has two parts:
 - Fine-tuning improves detection on your specific environment.  
 - Adjust `min_confidence` and `smoke_confidence` in the detector for better accuracy.  
 - TFCard storage is optional but recommended for logging.  
-- `COOLDOWN_MS` in `detector.c` can be modified to change alert frequency.  
+- `COOLDOWN_MS` in `detector.cpp` can be modified to change alert frequency.  
 - JPEG mode is recommended for fast storage and low memory usage.  
 
 ---
