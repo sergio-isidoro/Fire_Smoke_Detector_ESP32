@@ -18,7 +18,7 @@ void set_detection_status(bool status) {
 
 bool get_detection_status() {
     bool status = false;
-    if (xSemaphoreTake(state_mutex, (TickType_t)20)) { // Timeout de 20 ticks
+    if (xSemaphoreTake(state_mutex, (TickType_t)20)) { // Timeout 20 ticks
         status = detection_status;
         xSemaphoreGive(state_mutex);
     }
