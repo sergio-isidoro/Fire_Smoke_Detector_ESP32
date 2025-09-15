@@ -15,7 +15,7 @@ The project has two parts:
 - 🖥️ **Fine-tuning**: Train or continue training a YOLOv11 model with your own dataset.  
 - 📊 **Model Evaluation**: Test model performance with metrics and confusion matrix.  
 - 💾 **Export `.pt` model**: Save as `model.pt` to deploy on ESP32.  
-- 🧪 **Adjust thresholds**: Customize `min_confidence` and `smoke_confidence`.
+- 🧪 **Adjust thresholds**: Customize `min_confidence` and `fire_smoke_confidence`.
 
 ### ESP32-S3 Side
 - 🌐 **Camera Capture**: JPEG frames from OV2640 / ESP32-S3 camera.  
