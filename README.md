@@ -1,4 +1,4 @@
-# Fire & Smoke Detection (Edge AI) ESP32-S3 Sense + TFCard + Python Fine-Tuning
+# Fire & Smoke Detection (Edge AI) ESP32-S3 Sense + TFCard + Web Server + Python Fine-Tuning
 
 Real-time **fire and smoke detection** using **ESP32-S3 Sense** with camera module and **TFCard storage**, combined with **Python training & fine-tuning** of the detection model.  
 
@@ -12,10 +12,11 @@ The project has two parts:
 ## 📋 Features
 
 ### Python Side
-- 🖥️ **Fine-tuning**: Train or continue training a YOLOv11 model with your own dataset.  
-- 📊 **Model Evaluation**: Test model performance with metrics and confusion matrix.  
-- 💾 **Export `.pt` model**: Save as `model.pt` to deploy on ESP32.  
-- 🧪 **Adjust thresholds**: Customize `min_confidence` and `smoke_confidence`.
+
+- 🧠 **Model Fine-Tuning**: Train a YOLO model from scratch or fine-tune a pre-existing one on your custom dataset to specialize in fire and smoke detection.
+- 📊 **Performance Evaluation**: Assess the model's performance using precision metrics and visualize the results with a confusion matrix.
+- 💾 **Model Export**: Export the trained model to the `.pt` (PyTorch) format, making it ready for deployment.
+- 🧪 **Parameter Tuning**: Easily customize thresholds like `min_confidence` and `iou_threshold` to optimize the trade-off between detection accuracy and speed.
 
 ### ESP32-S3 Side
 - 🌐 **Camera Capture**: JPEG frames from OV2640 / ESP32-S3 camera.  
@@ -41,28 +42,33 @@ The project has two parts:
 
 ---
 
-## ⚙️ How to Train the Model and Generate `model_data.h`
+## ⚙️ How to Train and Generate the Model File
 
-1. **Train or Fine-Tune the Model in Python**:
-   - Use your dataset of fire, smoke, and no-fire images.
-   - Fine-tune the YOLOv11 model to improve detection on your environment.
-   - Export the trained model as a `.pt` file, for example `model.pt`.
+Follow these steps to train your own model and prepare it for deployment on the ESP32.
 
-2. **Convert `.pt` to TensorFlow Lite (`.tflite`)**:
-   - Use `torch2tflite` or an export script to convert the PyTorch `.pt` model to `.tflite`.
-   - Ensure optimizations for microcontrollers (quantization recommended).
+### 1. Train the Model (on PC)
+First, train or fine-tune the object detection model on your computer.
 
-3. **Generate `model.h` for ESP32**:
-   - Convert `.tflite` file into a C++ header file containing a byte array (`model_data.h`) for inclusion in ESP32 firmware.
-   - Tools like `xxd` or Python scripts can produce this:
-     ```
-     xxd -i model.tflite > model_data.h
-     ```
-   - Include `model_data.h` in your firmware to load the TFLite model into memory.
+-   Prepare your **dataset** with images of fire, smoke, and no-fire scenarios.
+-   Use the `fine_tune_model.py` script to train a **YOLO** model (e.g., YOLOv8 or higher) on your data.
+-   At the end of the training, the best model will be saved as a `.pt` file (e.g., `models/model.pt`).
 
-4. **Deploy to ESP32**:
-   - Flash the firmware with `main.cpp`, `detector.cpp/h`, `camera.cpp/h`, `storage.cpp/h` and `model_data.cpp/h`.
-   - The ESP32 will run the model on camera frames, trigger LED, and save images on TFCard.
+### 2. Convert the `.pt` Model to `.h`
+To allow the microcontroller to read the model, we need to convert it into a C++ byte array.
+
+-   Use the `RUN_export_pt-to-h.bat` script provided in the project.
+-   Run the converter from your terminal, providing the trained model (`.pt`) as input and the desired header file (`.h`) as output:
+    ```bash
+    python export_pt-to-h.py models/model.pt model_data.h
+    ```
+-   This command will generate the `model_data.h` file, which contains the model in the correct format for the firmware.
+
+### 3. Deploy to the ESP32
+Finally, integrate the new model into the ESP32 firmware.
+
+-   Replace the existing `model_data.h` file in your PlatformIO (or Arduino) project with the one you just generated.
+-   Compile and upload the updated firmware to your ESP32 board.
+-   The device will now use your custom model to detect fire and smoke, trigger alerts, and save images to the memory card.
 
 ---
 
@@ -74,7 +80,7 @@ The project has two parts:
 | `camera.cpp/h`       | Camera initialization and frame capture          |
 | `detector.cpp/h`     | TFLite Micro inference, LED control, cooldown    |
 | `storage.cpp/h`      | TFCard initialization and image saving           |
-| `model_data.cpp/h`     | TFLite model array for ESP32 deployment          |
+| `model_data.h`     | TFLite model array for ESP32 deployment          |
 
 ---
 
@@ -85,6 +91,16 @@ The project has two parts:
 - TFCard storage is optional but recommended for logging.  
 - `COOLDOWN_MS` in `detector.cpp` can be modified to change alert frequency.  
 - JPEG mode is recommended for fast storage and low memory usage.  
+
+---
+
+## 🚀 Project Status
+
+- [x] 🔥 Fire detection model  
+- [x] 💨 Smoke detection model  
+- [x] 💾 TF card storage  
+- [x] 🟢 Real-time camera input  
+- [ ] 📊 Accuracy benchmark results  
 
 ---
 
