@@ -26,10 +26,12 @@ def get_video_source():
         elif choice == '2':
             ip_address = input("Enter the IP address of your ESP32-S3: ")
             
-            # --- FIXED ---
-            # The stream URL now points to the default port 80,
-            # matching the C++ code on the ESP32.
-            url = f"http://{ip_address}/stream"
+            # --- ADICIONADO: Pede a porta com 80 como padrão ---
+            port_input = input("Enter the port (default is 80, just press Enter): ")
+            port = "80" if not port_input else port_input
+            
+            # --- ALTERADO: Constrói a URL com a porta especificada ---
+            url = f"http://{ip_address}:{port}/stream"
             
             print(f"Attempting to connect to stream: {url}")
             return url
