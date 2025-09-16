@@ -17,21 +17,21 @@ def get_video_source():
     while True:
         print("Choose the video source:")
         print("1: Local Webcam")
-        print("2: IP Camera (ESP32-S3)")
+        print("2: IP Camera (Python Server or ESP32)")
         choice = input("Enter your choice (1 or 2): ")
 
         if choice == '1':
             # Returns 0, which is the default index for the first webcam
             return 0
         elif choice == '2':
-            ip_address = input("Enter the IP address of your ESP32-S3: ")
+            ip_address = input("Enter the IP address of the server: ")
             
-            # --- ADICIONADO: Pede a porta com 80 como padrão ---
-            port_input = input("Enter the port (default is 80, just press Enter): ")
+            port_input = input("Enter the port (e.g., 5000, or press Enter for 80): ")
             port = "80" if not port_input else port_input
             
-            # --- ALTERADO: Constrói a URL com a porta especificada ---
-            url = f"http://{ip_address}:{port}/stream"
+            # --- ALTERADO: O caminho do URL agora é /video_feed ---
+            # Compatível com o script servidor_camera.py
+            url = f"http://{ip_address}:{port}/video_feed"
             
             print(f"Attempting to connect to stream: {url}")
             return url

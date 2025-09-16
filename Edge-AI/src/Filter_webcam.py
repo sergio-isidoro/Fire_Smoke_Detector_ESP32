@@ -7,12 +7,12 @@ active_filter = "None"
 
 # Dictionary to define the buttons (text, position, dimensions)
 buttons = {
-    "None":     (20, 20, 150, 40),
-    "Grayscale":(20, 70, 150, 40),
-    "Negative": (20, 120, 150, 40),
-    "Canny":    (20, 170, 150, 40),
-    "Sepia":    (20, 220, 150, 40),
-    "Color":    (20, 270, 150, 40),
+    "None":      (20, 20, 150, 40),
+    "Grayscale": (20, 70, 150, 40),
+    "Negative":  (20, 120, 150, 40),
+    "Canny":     (20, 170, 150, 40),
+    "Sepia":     (20, 220, 150, 40),
+    "Color":     (20, 270, 150, 40),
 }
 
 # Callback function for mouse events (button clicks)
@@ -69,7 +69,7 @@ def main():
             break
 
         # Flip the frame horizontally (mirror effect)
-        frame = cv.flip(frame, 1)
+        frame = cv2.flip(frame, 1) # <-- THIS IS THE CORRECTED LINE
         
         # Copy the original frame to apply the filter to
         filtered_frame = frame.copy()
