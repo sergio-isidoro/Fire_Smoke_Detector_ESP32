@@ -98,8 +98,8 @@ Finally, integrate the new model into the ESP32 firmware.
 
 - [x] 🔥 Fire detection model  
 - [x] 💨 Smoke detection model  
-- [ ] 💾 TF card storage  
-- [ ] 🟢 Real-time camera input  
+- [x] 💾 TF card storage  
+- [x] 🟢 Real-time camera input  
 - [ ] 📊 Accuracy benchmark results  
 
 ---
