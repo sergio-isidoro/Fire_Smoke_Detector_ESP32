@@ -5,35 +5,39 @@ from fire_detector import Detector
 import time
 import logging
 
-# --- NOVO: Configuração do logging para ver mensagens de erro do detector ---
+# --- Logging configuration to see detector error messages ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# --- NOVO: Função para escolher a fonte de vídeo ---
+# --- Function to choose the video source ---
 def get_video_source():
     """
-    Pergunta ao utilizador qual fonte de vídeo usar (webcam ou IP) e retorna
-    o identificador apropriado para o OpenCV.
+    Asks the user which video source to use (webcam or IP) and returns
+    the appropriate identifier for OpenCV.
     """
     while True:
-        print("Escolha a fonte de vídeo:")
-        print("1: Webcam Local")
-        print("2: Câmera IP (ESP32-S3)")
-        choice = input("Digite sua escolha (1 ou 2): ")
+        print("Choose the video source:")
+        print("1: Local Webcam")
+        print("2: IP Camera (ESP32-S3)")
+        choice = input("Enter your choice (1 or 2): ")
 
         if choice == '1':
-            # Retorna 0, que é o índice padrão para a primeira webcam
+            # Returns 0, which is the default index for the first webcam
             return 0
         elif choice == '2':
-            ip_address = input("Digite o endereço IP do seu ESP32-S3: ")
-            # O URL de stream para o web server da câmara do ESP32 é geralmente neste formato
-            url = f"http://{ip_address}:81/stream"
-            print(f"A tentar conectar ao stream: {url}")
+            ip_address = input("Enter the IP address of your ESP32-S3: ")
+            
+            # --- FIXED ---
+            # The stream URL now points to the default port 80,
+            # matching the C++ code on the ESP32.
+            url = f"http://{ip_address}/stream"
+            
+            print(f"Attempting to connect to stream: {url}")
             return url
         else:
-            print("❌ Escolha inválida. Por favor, tente novamente.\n")
+            print("❌ Invalid choice. Please try again.\n")
 
 
-# Coordenadas do botão "EXIT" para Full HD
+# Coordinates for the "EXIT" button
 BUTTON_X, BUTTON_Y, BUTTON_W, BUTTON_H = 20, 20, 200, 80
 
 def click_event(event, x, y, flags, param):
@@ -42,53 +46,50 @@ def click_event(event, x, y, flags, param):
             param['exit'] = True
 
 def main():
-    # --- ALTERADO: Primeiro, obter a fonte de vídeo do utilizador ---
+    # Get the video source from the user
     video_source = get_video_source()
 
     try:
-        # Inicializar o detector
+        # Initialize the detector
         detector = Detector(Config.MODEL_PATH, iou_threshold=0.20)
 
-        # --- ALTERADO: Abrir a fonte de vídeo escolhida (webcam ou IP) ---
+        # Open the chosen video source (webcam or IP)
         cap = cv2.VideoCapture(video_source)
         if not cap.isOpened():
-            print(f"❌ Não foi possível abrir a fonte de vídeo: {video_source}")
+            print(f"❌ Could not open video source: {video_source}")
             sys.exit(1)
 
-        # --- REMOVIDO/COMENTADO: A definição de resolução pode causar erros com streams IP ---
-        # A resolução do stream será a nativa da câmara ESP32.
-        # cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
-        # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
-
+        # The resolution setting was removed as it can cause errors with IP streams
+        
         alert_cooldown = Config.ALERT_COOLDOWN
         last_alert_time = 0
         next_detection_to_report = "any"
 
-        # Configurar o callback do rato
+        # Set up the mouse callback
         mouse_param = {'exit': False}
         cv2.namedWindow("Fire Detection System")
         cv2.setMouseCallback("Fire Detection System", click_event, mouse_param)
 
-        print("\n✅ Sistema iniciado. Pressione 'q' ou clique em 'EXIT' para sair.")
+        print("\n✅ System started. Press 'q' or click 'EXIT' to quit.")
 
         while True:
             ret, frame = cap.read()
             if not ret:
-                print("❌ Falha ao capturar frame. A conexão pode ter sido perdida.")
+                print("❌ Failed to capture frame. The connection may have been lost.")
                 break
 
-            # Pipeline de deteção
+            # Detection pipeline
             processed_frame, detection = detector.process_frame(frame)
 
             if detection:
                 current_time = time.time()
                 if (next_detection_to_report == "any" or detection == next_detection_to_report) \
                         and (current_time - last_alert_time) > alert_cooldown:
-                    print(f"🐦‍🔥 {detection} detectado!")
+                    print(f"🐦‍🔥 {detection} detected!")
                     last_alert_time = current_time
                     next_detection_to_report = "Smoke" if detection == "Fire" else "Fire"
 
-            # Desenhar o botão EXIT
+            # Draw the EXIT button
             cv2.rectangle(processed_frame, (BUTTON_X, BUTTON_Y),
                           (BUTTON_X + BUTTON_W, BUTTON_Y + BUTTON_H), (0,0,255), -1)
             cv2.putText(processed_frame, "EXIT", (BUTTON_X + 40, BUTTON_Y + 55),
@@ -96,12 +97,12 @@ def main():
 
             cv2.imshow("Fire Detection System", processed_frame)
 
-            # Sair se o botão for clicado ou 'q' for pressionado
+            # Exit if the button is clicked or 'q' is pressed
             if cv2.waitKey(1) & 0xFF == ord('q') or mouse_param['exit']:
                 break
 
     except Exception as e:
-        print(f"🚨 Falha crítica: {str(e)}")
+        print(f"🚨 Critical failure: {str(e)}")
         sys.exit(1)
     finally:
         if 'cap' in locals():
