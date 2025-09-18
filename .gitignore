@@ -1,4 +1,5 @@
 build/
+Edge-AI/src/__pycache__/
 managed_components/
 sdkconfig
 sdkconfig.old
