@@ -50,7 +50,7 @@ Follow these steps to train your own model and prepare it for deployment on the 
 First, train or fine-tune the object detection model on your computer.
 
 -   Prepare your **dataset** with images of fire, smoke, and no-fire scenarios.
--   Use the `fine_tune_model.py` script to train a **YOLO** model (e.g., YOLOv8 or higher) on your data.
+-   Use the `train_model.py` script to train a **YOLO** model (e.g., YOLOv8 or higher) on your data.
 -   At the end of the training, the best model will be saved as a `.pt` file (e.g., `models/model.pt`).
 
 ### 2. Convert the `.pt` Model to `.h`
